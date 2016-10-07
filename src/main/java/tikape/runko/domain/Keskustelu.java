@@ -1,8 +1,7 @@
-
 package tikape.runko.domain;
 
-
 public class Keskustelu {
+
     private String aihe;
     private String keskustelu;
     private Integer keskustelutunnus;
@@ -21,12 +20,20 @@ public class Keskustelu {
         this.aihe = aihe;
     }
 
-    public String getNimi() {
-        return nimi;
+    public String getKeskustelu() {
+        return keskustelu;
     }
 
-    public void setNimi(String nimi) {
-        this.nimi = nimi;
+    public void setKeskustelu(String keskustelu) {
+        this.keskustelu = keskustelu;
     }
-    
+
+    public Integer getKeskustelutunnus() {
+        return keskustelutunnus;
+    }
+
+    public void setKeskustelutunnus(Integer keskustelutunnus) {
+        this.keskustelutunnus = keskustelutunnus;
+    }
+
 }
