@@ -23,6 +23,7 @@ public class KeskusteluDao implements Dao<Keskustelu, Integer> {
         this.AiheDao = aiheDao;
     }
 
+    
     @Override
     public Keskustelu findOne(Integer key) throws SQLException {
         Connection connection = database.getConnection();
@@ -35,11 +36,11 @@ public class KeskusteluDao implements Dao<Keskustelu, Integer> {
             return null;
         }
 
-        String aihe = rs.getString("aihe");
+        String alue = rs.getString("aihe");
         Integer keskustelutunnus = rs.getInt("keskustelutunnus");
         String keskustelu = rs.getString("keskustelu");
 
-        Keskustelu k = new Keskustelu(aihe, keskustelutunnus, keskustelu);
+        Keskustelu k = new Keskustelu(alue, keskustelu, keskustelutunnus);
 
         rs.close();
         stmt.close();
@@ -61,14 +62,14 @@ public class KeskusteluDao implements Dao<Keskustelu, Integer> {
 
         while (rs.next()) {
 
-            String aihe = rs.getString("aihe");
+            String alue = rs.getString("alue");
             Integer keskustelutunnus = rs.getInt("keskustelutunnus");
             String keskustelut = rs.getString("keskustelu");
 
-            Keskustelu k = new Keskustelu(aihe, keskustelutunnus, keskustelut);
+            Keskustelu k = new Keskustelu(alue, keskustelut, keskustelutunnus);
             keskustelu.add(k);
 
-            String alue = rs.getString("alue");
+            String aihe = rs.getString("alue");
 
             if (!keskustelujenAiheet.containsKey(alue)) {
                 keskustelujenAiheet.put(alue, new ArrayList<>());
@@ -80,9 +81,9 @@ public class KeskusteluDao implements Dao<Keskustelu, Integer> {
         stmt.close();
         connection.close();
 
-        for (Aihe alue: this.AiheDao.findAllIn(keskustelujenAiheet.keySet())) {           
-            for (Keskustelu keskusteluu : keskustelujenAiheet.get(alue.getAihe())) {
-                keskusteluu.setAihe(alue);
+        for (Aihe aih: this.AiheDao.findAllIn(keskustelujenAiheet.keySet())) {           
+            for (Keskustelu keskusteluu : keskustelujenAiheet.get(aih.getAihe())) {
+                keskusteluu.setAihe(aih);
             }
         }
         
@@ -123,7 +124,7 @@ public class KeskusteluDao implements Dao<Keskustelu, Integer> {
             Integer keskustelutunnus = rs.getInt("keskustelutunnus");
             String keskustelut = rs.getString("keskustelu");
 
-            Keskustelu k = new Keskustelu(aihe, keskustelutunnus, keskustelut);
+            Keskustelu k = new Keskustelu(aihe, keskustelut, keskustelutunnus);
             keskustelu.add(k);
         }
 

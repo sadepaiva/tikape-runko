@@ -42,7 +42,11 @@ public class Database {
         lista.add("CREATE TABLE Aihe (aihe varchar(50) PRIMARY KEY);");
         lista.add("INSERT INTO Aihe VALUES ('Ohjelmointi');");
         lista.add("INSERT INTO Aihe VALUES ('Matematiikka');");
-//        lista.add("INSERT INTO Opiskelija (nimi) VALUES ('Homeros');");
+        
+        lista.add("CREATE TABLE Keskustelu (alue varchar(50), keskustelu varchar(50),keskustelutunnus integer PRIMARY KEY,FOREIGN KEY (alue) REFERENCES Aihe(aihe));");
+        lista.add("INSERT INTO Keskustelu VALUES ('Ohjelmointi','Java',1);");
+        lista.add("CREATE TABLE Viesti (viestitunnus integer PRIMARY KEY, keskustelu varchar(50), keskustelutunnus integer,viestinro integer, viesti varchar(2500) NOT NULL, nimimerkki varchar(50) NOT NULL,pvm date, pvm_ja_aika timestamp,FOREIGN KEY (keskustelutunnus) REFERENCES Keskustelu(keskustelutunnus));");
+      
 
         return lista;
     }

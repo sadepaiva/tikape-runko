@@ -21,5 +21,12 @@ public class Aihe {
     public void setAihe(String aihe) {
         this.aihe = aihe;
     }
+
+    @Override
+    public String toString() {
+        return super.toString(); 
+    }
+    
+     
     
 }

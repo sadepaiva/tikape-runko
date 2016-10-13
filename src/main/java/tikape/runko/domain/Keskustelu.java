@@ -5,25 +5,25 @@ import java.util.List;
 
 public class Keskustelu {
 
-    private String aihe;
+    private String alue;
     private Integer keskustelutunnus;
     private String keskustelu;
     private List<Viesti> viestit;
     
 
-    public Keskustelu(String aihe,int keskustelutunnus, String keskustelu) {
-        this.aihe = aihe;
+    public Keskustelu(String alue, String keskustelu, int keskustelutunnus) {
+        this.alue = alue;
         this.keskustelu = keskustelu;
         this.keskustelutunnus = keskustelutunnus;
         this.viestit= new ArrayList<>();
     }
 
-    public String getAihe() {
-        return aihe;
+    public String getAlue() {
+        return alue;
     }
 
-    public void setAihe(String aihe) {
-        this.aihe = aihe;
+    public void setAlue(String alue) {
+        this.alue = alue;
     }
 
     public String getKeskustelu() {
@@ -42,8 +42,9 @@ public class Keskustelu {
         this.keskustelutunnus = keskustelutunnus;
     }
 
-    public void setAihe(Aihe alue) {
+    public void setAihe(Aihe aih) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
+    
 }
