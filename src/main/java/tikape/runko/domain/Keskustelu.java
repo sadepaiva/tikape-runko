@@ -1,23 +1,21 @@
 package tikape.runko.domain;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Keskustelu {
 
     private String aihe;
-<<<<<<< HEAD
     private Integer keskustelutunnus;
     private String keskustelu;
+    private List<Viesti> viestit;
     
 
     public Keskustelu(String aihe,int keskustelutunnus, String keskustelu) {
-=======
-    private String keskustelu;
-    private Integer keskustelutunnus;
-
-    public Keskustelu(String aihe, String keskustelu, int keskustelutunnus) {
->>>>>>> ad0c5d18b1ee29c1d206803f961bef1eb0f2e120
         this.aihe = aihe;
         this.keskustelu = keskustelu;
         this.keskustelutunnus = keskustelutunnus;
+        this.viestit= new ArrayList<>();
     }
 
     public String getAihe() {
@@ -42,6 +40,10 @@ public class Keskustelu {
 
     public void setKeskustelutunnus(Integer keskustelutunnus) {
         this.keskustelutunnus = keskustelutunnus;
+    }
+
+    public void setAihe(Aihe alue) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
 }

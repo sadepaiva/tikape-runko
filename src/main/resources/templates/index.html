@@ -6,11 +6,13 @@
         <meta charset="utf-8" />
     </head>
 
-    <body>
-        <h1>Heippa vaan!</h1>
+     <body>
+        <h1>Aiheet:</h1>
 
-        <p>Ja .. <span th:text="${viesti}">jotain?</span></p>
-
-        <p><a href="/opiskelijat">Tästä opiskelijalistaukseen.</a></p>
+        <ol>
+            <li th:each="aihe: ${aiheet}">
+                <span th:text="${aihe.aihe}">aiheen nimi</span> 
+            </li>
+        </ol>
     </body>
 </html>
