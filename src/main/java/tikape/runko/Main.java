@@ -6,6 +6,7 @@ import java.util.List;
 import spark.ModelAndView;
 import spark.Request;
 import spark.Response;
+import spark.Spark;
 import static spark.Spark.*;
 import spark.template.thymeleaf.ThymeleafTemplateEngine;
 import tikape.runko.database.AiheDao;
@@ -17,51 +18,56 @@ import tikape.runko.domain.Keskustelu;
 public class Main {
 
     public static void main(String[] args) throws Exception {
+        port(getHerokuAssignedPort());
 
-        Database database = new Database("jdbc:sqlite:keskustelupalsta.db");
-        database.init();
-
-        AiheDao aiheDao = new AiheDao(database);
+        AiheDao aiheDao = new AiheDao("jdbc:sqlite:keskustelupalsta.db");
+        KeskusteluDao keskusteluDao = new KeskusteluDao("jdbc:sqlite:keskustelupalsta.db");
         
+        Spark.get("/", (req, res) -> {
+            res.redirect("/aiheet");
+            return "ok";
+        });
+        
+        Spark.get("/aiheet", (req, res) -> {
+            HashMap data = new HashMap<>();
+            data.put("aiheet", aiheDao.findAll());
 
-        List<Aihe> aiheet = new ArrayList<>();
-        aiheet = aiheDao.findAll();
-
-        for (Aihe aihe : aiheet) {
-            System.out.println(aihe.getAihe());
-            System.out.println();
-        }
-
-        get("/keskustelupalsta", (Request req, Response res) -> {
-            HashMap map = new HashMap<>();
-            map.put("teksti", "Aihealueet");
-            map.put("aiheet", aiheDao.findAll());
-
-            return new ModelAndView(map, "index");
+            return new ModelAndView(data, "index");
         }, new ThymeleafTemplateEngine());
         
         
+        Spark.post("/aiheet", (req, res) -> {
+            aiheDao.luoAihe(req.queryParams("nimi"));
+            res.redirect("/aiheet");
+            return "ok";
+        });
         
-        KeskusteluDao keskusteluDao = new KeskusteluDao(database, aiheDao);
+//          KESKEN
+//        Spark.get("/aiheet/:aihe", (req, res) -> {
+//            HashMap data = new HashMap<>();
+//            String aiheNimi = aiheDao.findOne(req.params(":aihe"));
+//            data.put("keskustelut", keskusteluDao.haeAiheenKt(aiheNimi);
+//            data.put("aihe", aiheDao.findOne(Integer.parseInt(req.params(":aihe_id"))));
+//
+//            return new ModelAndView(data, "aiheenKeskustelut");
+//        }, new ThymeleafTemplateEngine());
+    
         
-        List<Keskustelu> keskustelut = new ArrayList<>();
-        keskustelut = keskusteluDao.findAll();
+        Spark.get("/keskustelut", (req, res) -> {
+            HashMap data = new HashMap<>();
+            data.put("keskustelu", keskusteluDao.findAll());
 
-        for (Keskustelu keskustelu : keskustelut) {
-            System.out.println(keskustelu.getAlue());
-            System.out.println(keskustelu.getKeskustelu());
-            System.out.println(keskustelu.getKeskustelutunnus());
-            System.out.println();
-        }
-
-        get("/keskustelut", (Request req, Response res) -> {
-            HashMap map = new HashMap<>();
-            map.put("teksti", "Keskustelut");
-            map.put("keskustelut", keskusteluDao.findAll());
-
-            return new ModelAndView(map, "keskustelu");
+            return new ModelAndView(data, "keskustelu");
         }, new ThymeleafTemplateEngine());
 
+    }
+
+    static int getHerokuAssignedPort() {
+        ProcessBuilder processBuilder = new ProcessBuilder();
+        if (processBuilder.environment().get("PORT") != null) {
+            return Integer.parseInt(processBuilder.environment().get("PORT"));
+        }
+        return 4567; //return default port if heroku-port isn't set (i.e. on localhost)
     }
 }
 //           get("/", (req, res) -> {

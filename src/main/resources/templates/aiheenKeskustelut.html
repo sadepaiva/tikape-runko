@@ -4,16 +4,16 @@
         <title>Otsikko</title>
     </head>
     <body>
-        <h1>Keskustelupalsta</h1>
-        <h2 th:text="${teksti}">testi</h2>
+        <h1>aiheenKeskustelut</h1>
+        <h2 th:text="${aihe}">testi</h2>
         <ul>
-            <li th:each="aihe: ${aiheet}">
-                <a th:href="@{~/aiheet/{id}(id=${aihe.aihe})}" 
-                 th:text="${aihe.aihe}">1</a>
+            <li th:each="keskustelu: ${keskustelu}">   
+                <a th:href="@{~/{aihe}/{keskustelu}(aihe=${aihe.aihe_id})(keskustelu=${keskustelu.keskustelutunnus})}" 
+                 th:text="${keskustelu.keskustelu}">Keskustelu esimerkki</a>
             </li>
         </ul>
         
-          <form method="POST">
+            <form method="POST">
             <input type="text" name="nimi"/>
             <input type="submit" value="lisää!"/>
         </form>

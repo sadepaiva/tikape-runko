@@ -39,9 +39,7 @@ public class Database {
         ArrayList<String> lista = new ArrayList<>();
 
         // tietokantataulujen luomiseen tarvittavat komennot suoritusjärjestyksessä
-        lista.add("CREATE TABLE Aihe (aihe varchar(50) PRIMARY KEY);");
-        lista.add("INSERT INTO Aihe VALUES ('Ohjelmointi');");
-        lista.add("INSERT INTO Aihe VALUES ('Matematiikka');");
+       
         
         lista.add("CREATE TABLE Keskustelu (alue varchar(50), keskustelu varchar(50),keskustelutunnus integer PRIMARY KEY,FOREIGN KEY (alue) REFERENCES Aihe(aihe));");
         lista.add("INSERT INTO Keskustelu VALUES ('Ohjelmointi','Java',1);");

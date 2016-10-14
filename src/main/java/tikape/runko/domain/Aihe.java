@@ -5,13 +5,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Aihe {
-    
+    private Integer aihe_id;
     private String aihe;
-    private List<Keskustelu> keskustelut;
+//    private List<Keskustelu> keskustelut;
 
-    public Aihe(String aihe) {
+    public Aihe(int aihe_id, String aihe) {
+        this.aihe_id = aihe_id;
         this.aihe = aihe;
-        this.keskustelut= new ArrayList<>();
+        
     }
 
     public String getAihe() {
@@ -20,6 +21,14 @@ public class Aihe {
 
     public void setAihe(String aihe) {
         this.aihe = aihe;
+    }
+    
+    public int getAiheId() {
+        return aihe_id;
+    }
+
+    public void setAiheId(int aiheId) {
+        this.aihe_id = aiheId;
     }
 
     @Override

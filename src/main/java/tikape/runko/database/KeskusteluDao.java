@@ -2,9 +2,11 @@
 package tikape.runko.database;
 
 import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -13,114 +15,32 @@ import java.util.Map;
 import tikape.runko.domain.Aihe;
 import tikape.runko.domain.Keskustelu;
 
-public class KeskusteluDao implements Dao<Keskustelu, Integer> {
+public class KeskusteluDao  {
+private String tietokantaosoite;
 
-    private Database database;
-    private Dao<Aihe, String> AiheDao;
-
-    public KeskusteluDao(Database database, Dao<Aihe, String> aiheDao) {
-        this.database = database;
-        this.AiheDao = aiheDao;
+    public KeskusteluDao(String tietokantaosoite) {
+        this.tietokantaosoite = tietokantaosoite;
     }
 
+    public void luoKeskustelu(String keskustelu) throws Exception {
+        Connection conn = DriverManager.getConnection(tietokantaosoite);
+        Statement stmt = conn.createStatement();
+        stmt.execute("INSERT INTO Keskustelu(keskustelu) "
+                + "VALUES ('" + keskustelu + "')");
+
+        conn.close();
+
+    }
     
-    @Override
-    public Keskustelu findOne(Integer key) throws SQLException {
-        Connection connection = database.getConnection();
-        PreparedStatement stmt = connection.prepareStatement("SELECT * FROM Keskustelu WHERE keskustelutunnus = ?");
-        stmt.setObject(1, key);
-
-        ResultSet rs = stmt.executeQuery();
-        boolean hasOne = rs.next();
-        if (!hasOne) {
-            return null;
-        }
-
-        String alue = rs.getString("aihe");
-        Integer keskustelutunnus = rs.getInt("keskustelutunnus");
-        String keskustelu = rs.getString("keskustelu");
-
-        Keskustelu k = new Keskustelu(alue, keskustelu, keskustelutunnus);
-
-        rs.close();
-        stmt.close();
-        connection.close();
-
-        return k;
-    }
-
-    @Override
-    public List<Keskustelu> findAll() throws SQLException {
-
-        Connection connection = database.getConnection();
-        PreparedStatement stmt = connection.prepareStatement("SELECT * FROM Keskustelu");
-        ResultSet rs = stmt.executeQuery();
-
-        Map<String, List<Keskustelu>> keskustelujenAiheet = new HashMap<>();
+      public List<Keskustelu> haeAiheenKt(String alueId) throws Exception {
+        Connection conn = DriverManager.getConnection(tietokantaosoite);
+        Statement stmt = conn.createStatement();
+        ResultSet rs = stmt.executeQuery("SELECT * FROM Keskustelu WHERE aihe_id = "+ alueId );
 
         List<Keskustelu> keskustelu = new ArrayList<>();
 
         while (rs.next()) {
-
-            String alue = rs.getString("alue");
-            Integer keskustelutunnus = rs.getInt("keskustelutunnus");
-            String keskustelut = rs.getString("keskustelu");
-
-            Keskustelu k = new Keskustelu(alue, keskustelut, keskustelutunnus);
-            keskustelu.add(k);
-
-            String aihe = rs.getString("alue");
-
-            if (!keskustelujenAiheet.containsKey(alue)) {
-                keskustelujenAiheet.put(alue, new ArrayList<>());
-            }
-            keskustelujenAiheet.get(alue).add(k);
-        }
-
-        rs.close();
-        stmt.close();
-        connection.close();
-
-        for (Aihe aih: this.AiheDao.findAllIn(keskustelujenAiheet.keySet())) {           
-            for (Keskustelu keskusteluu : keskustelujenAiheet.get(aih.getAihe())) {
-                keskusteluu.setAihe(aih);
-            }
-        }
-        
-        return keskustelu;
-    }
-
-    @Override
-    public void delete(Integer key) throws SQLException {
-        // ei toteutettu
-    }
-    
-    @Override
-    public List<Keskustelu> findAllIn(Collection<Integer> keys) throws SQLException {
-        if (keys.isEmpty()) {
-            return new ArrayList<>();
-        }
-
-        StringBuilder muuttujat = new StringBuilder("?");
-        for (int i = 1; i < keys.size(); i++) {
-            muuttujat.append(", ?");
-        }
-
-        Connection connection = database.getConnection();
-        PreparedStatement stmt = connection.prepareStatement("SELECT * FROM Keskustelu");
-        int laskuri = 1;
-        for (Integer key : keys) {
-            stmt.setObject(laskuri, key);
-            laskuri++;
-        }
-
-        ResultSet rs = stmt.executeQuery();
-        
-        List<Keskustelu> keskustelu = new ArrayList<>();
-
-        while (rs.next()) {
-
-            String aihe = rs.getString("aihe");
+            int aihe = rs.getInt("aihe");
             Integer keskustelutunnus = rs.getInt("keskustelutunnus");
             String keskustelut = rs.getString("keskustelu");
 
@@ -128,12 +48,153 @@ public class KeskusteluDao implements Dao<Keskustelu, Integer> {
             keskustelu.add(k);
         }
 
-        rs.close();
-        stmt.close();
-        connection.close();
+        conn.close();
 
         return keskustelu;
     }
+    
+    public List<Keskustelu> findAll() throws Exception {
+        Connection conn = DriverManager.getConnection(tietokantaosoite);
+        Statement stmt = conn.createStatement();
+        ResultSet rs = stmt.executeQuery("SELECT * FROM Keskustelu");
 
+        List<Keskustelu> keskustelu = new ArrayList<>();
 
+        while (rs.next()) {
+            int aihe = rs.getInt("aihe");
+            Integer keskustelutunnus = rs.getInt("keskustelutunnus");
+            String keskustelut = rs.getString("keskustelu");
+
+            Keskustelu k = new Keskustelu(aihe, keskustelut, keskustelutunnus);
+            keskustelu.add(k);
+ 
+        }
+        rs.close();
+        stmt.close();
+        conn.close();
+
+        return keskustelu;
+    }
+    
+    public String findOne(int tunnus) throws Exception {
+        String k = null;
+
+        Connection conn = DriverManager.getConnection(tietokantaosoite);
+        Statement stmt = conn.createStatement();
+        ResultSet result = stmt.executeQuery("SELECT keskustelu FROM Keskustelu WHERE keskustelutunnus = " + tunnus);
+
+        while (result.next()) {
+            k = result.getString("keskustelu");
+        }
+
+        conn.close();
+
+        return k;
+    }
+    
+   
+    public void poista(String id) throws Exception {
+        Connection conn = DriverManager.getConnection(tietokantaosoite);
+        Statement stmt = conn.createStatement();
+        try {
+            Integer.parseInt(id);
+        } catch (Throwable t) {
+            return;
+        }
+        // 1%20OR%201=1
+        // 1 OR 1=1
+        // DELETE FROM Todo WHERE id = 1 OR 1=1
+        stmt.execute("DELETE FROM Keskustelu WHERE keskustelutunnus = " + id);
+        conn.close();
+    }
+    
 }
+
+//    @Override
+//    public List<Keskustelu> findAll() throws SQLException {
+//
+//        Connection connection = database.getConnection();
+//        PreparedStatement stmt = connection.prepareStatement("SELECT * FROM Keskustelu");
+//        ResultSet rs = stmt.executeQuery();
+//
+//        Map<String, List<Keskustelu>> keskustelujenAiheet = new HashMap<>();
+//
+//        List<Keskustelu> keskustelu = new ArrayList<>();
+//
+//        while (rs.next()) {
+//
+//            String alue = rs.getString("alue");
+//            Integer keskustelutunnus = rs.getInt("keskustelutunnus");
+//            String keskustelut = rs.getString("keskustelu");
+//
+//            Keskustelu k = new Keskustelu(alue, keskustelut, keskustelutunnus);
+//            keskustelu.add(k);
+//
+//            String aihe = rs.getString("alue");
+//
+//            if (!keskustelujenAiheet.containsKey(alue)) {
+//                keskustelujenAiheet.put(alue, new ArrayList<>());
+//            }
+//            keskustelujenAiheet.get(alue).add(k);
+//        }
+//
+//        rs.close();
+//        stmt.close();
+//        connection.close();
+//
+//        for (Aihe aih: this.AiheDao.findAllIn(keskustelujenAiheet.keySet())) {           
+//            for (Keskustelu keskusteluu : keskustelujenAiheet.get(aih.getAihe())) {
+//                keskusteluu.setAihe(aih);
+//            }
+//        }
+//        
+//        return keskustelu;
+//    }
+//
+//    @Override
+//    public void delete(Integer key) throws SQLException {
+//        // ei toteutettu
+//    }
+//    
+//    @Override
+//    public List<Keskustelu> findAllIn(Collection<Integer> keys) throws SQLException {
+//        if (keys.isEmpty()) {
+//            return new ArrayList<>();
+//        }
+//
+//        StringBuilder muuttujat = new StringBuilder("?");
+//        for (int i = 1; i < keys.size(); i++) {
+//            muuttujat.append(", ?");
+//        }
+//
+//        Connection connection = database.getConnection();
+//        PreparedStatement stmt = connection.prepareStatement("SELECT * FROM Keskustelu");
+//        int laskuri = 1;
+//        for (Integer key : keys) {
+//            stmt.setObject(laskuri, key);
+//            laskuri++;
+//        }
+//
+//        ResultSet rs = stmt.executeQuery();
+//        
+//        List<Keskustelu> keskustelu = new ArrayList<>();
+//
+//        while (rs.next()) {
+//
+//            String aihe = rs.getString("aihe");
+//            Integer keskustelutunnus = rs.getInt("keskustelutunnus");
+//            String keskustelut = rs.getString("keskustelu");
+//
+//            Keskustelu k = new Keskustelu(aihe, keskustelut, keskustelutunnus);
+//            keskustelu.add(k);
+//        }
+//
+//        rs.close();
+//        stmt.close();
+//        connection.close();
+//
+//        return keskustelu;
+//    }
+//
+//
+//}
