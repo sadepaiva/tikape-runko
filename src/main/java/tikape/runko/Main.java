@@ -42,23 +42,33 @@ public class Main {
             return "ok";
         });
         
-//          KESKEN
-//        Spark.get("/aiheet/:aihe", (req, res) -> {
-//            HashMap data = new HashMap<>();
-//            String aiheNimi = aiheDao.findOne(req.params(":aihe"));
-//            data.put("keskustelut", keskusteluDao.haeAiheenKt(aiheNimi);
-//            data.put("aihe", aiheDao.findOne(Integer.parseInt(req.params(":aihe_id"))));
-//
-//            return new ModelAndView(data, "aiheenKeskustelut");
-//        }, new ThymeleafTemplateEngine());
-    
         
-        Spark.get("/keskustelut", (req, res) -> {
+        Spark.get("/aiheet/:aihe", (req, res) -> {
             HashMap data = new HashMap<>();
-            data.put("keskustelu", keskusteluDao.findAll());
+            int aiheId = aiheDao.findOne(req.params(":aihe"));
+            data.put("keskustelut", keskusteluDao.haeAiheenKt(aiheId));
+            data.put("aihe", aiheDao.findOne((req.params(":aihe"))));
 
-            return new ModelAndView(data, "keskustelu");
+            return new ModelAndView(data, "aiheenKeskustelut");
         }, new ThymeleafTemplateEngine());
+        
+        Spark.post("/aiheet/:aihe", (req, res) -> {
+            int aiheId = aiheDao.findOne(req.params(":aihe"));
+            keskusteluDao.luoKeskustelu(req.queryParams("keskustelu"), (aiheId));
+
+            res.redirect("/aiheet/" + req.params(":aihe"));
+            return "ok";
+        });
+        
+        
+        
+        
+//        Spark.get("/keskustelut", (req, res) -> {
+//            HashMap data = new HashMap<>();
+//            data.put("keskustelu", keskusteluDao.findAll());
+//
+//            return new ModelAndView(data, "keskustelu");
+//        }, new ThymeleafTemplateEngine());
 
     }
 

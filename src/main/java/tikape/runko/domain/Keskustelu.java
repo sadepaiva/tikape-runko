@@ -4,14 +4,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Keskustelu {
-
-    private Integer aihe;
+    
     private Integer keskustelutunnus;
+    private Integer aihe;
     private String keskustelu;
     
     
 
-    public Keskustelu(int aihe, String keskustelu, int keskustelutunnus) {
+    public Keskustelu(int keskustelutunnus, String keskustelu,int aihe ) {
         this.aihe = aihe;
         this.keskustelu = keskustelu;
         this.keskustelutunnus = keskustelutunnus;

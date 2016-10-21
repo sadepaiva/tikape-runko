@@ -50,15 +50,15 @@ public class AiheDao {
         return aiheet;
     }
 
-    public String findOne(String aihe) throws Exception {
-        String a = null;
+    public int findOne(String aihe) throws Exception {
+        int a = 0;
 
         Connection conn = DriverManager.getConnection(tietokantaosoite);
         Statement stmt = conn.createStatement();
-        ResultSet result = stmt.executeQuery("SELECT aihe_id FROM Aihe WHERE aihe = " + aihe);
+        ResultSet result = stmt.executeQuery("SELECT aihe_id FROM Aihe WHERE aihe = '" + aihe+"'");
 
         while (result.next()) {
-            a = result.getString("aihe_id");
+            a = result.getInt("aihe_id");
         }
 
         conn.close();

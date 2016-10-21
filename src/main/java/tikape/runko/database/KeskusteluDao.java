@@ -22,20 +22,20 @@ private String tietokantaosoite;
         this.tietokantaosoite = tietokantaosoite;
     }
 
-    public void luoKeskustelu(String keskustelu) throws Exception {
+    public void luoKeskustelu( String keskustelu, int aiheId) throws Exception {
         Connection conn = DriverManager.getConnection(tietokantaosoite);
         Statement stmt = conn.createStatement();
-        stmt.execute("INSERT INTO Keskustelu(keskustelu) "
-                + "VALUES ('" + keskustelu + "')");
+        stmt.execute("INSERT INTO Keskustelu(aihe, keskustelu) "
+                + "VALUES ("+aiheId +", '" + keskustelu + "')");
 
         conn.close();
 
     }
     
-      public List<Keskustelu> haeAiheenKt(String alueId) throws Exception {
+      public List<Keskustelu> haeAiheenKt(int alueId) throws Exception {
         Connection conn = DriverManager.getConnection(tietokantaosoite);
         Statement stmt = conn.createStatement();
-        ResultSet rs = stmt.executeQuery("SELECT * FROM Keskustelu WHERE aihe_id = "+ alueId );
+        ResultSet rs = stmt.executeQuery("SELECT * FROM Keskustelu WHERE aihe = "+ alueId );
 
         List<Keskustelu> keskustelu = new ArrayList<>();
 
@@ -44,7 +44,7 @@ private String tietokantaosoite;
             Integer keskustelutunnus = rs.getInt("keskustelutunnus");
             String keskustelut = rs.getString("keskustelu");
 
-            Keskustelu k = new Keskustelu(aihe, keskustelut, keskustelutunnus);
+            Keskustelu k = new Keskustelu(keskustelutunnus,  keskustelut, aihe);
             keskustelu.add(k);
         }
 
