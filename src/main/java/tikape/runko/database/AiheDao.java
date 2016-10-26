@@ -6,11 +6,11 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import tikape.runko.domain.Aihe;
-
 
 public class AiheDao {
 
@@ -40,8 +40,10 @@ public class AiheDao {
         while (result.next()) {
             int id = result.getInt("aihe_id");
             String aihe = result.getString("aihe");
+            int viesteja = result.getInt("yhteensa");
+            Timestamp uusin= result.getTimestamp("uusin");
 
-            Aihe aihet = new Aihe(id, aihe);
+            Aihe aihet = new Aihe(id, aihe, viesteja, uusin);
             aiheet.add(aihet);
         }
 
@@ -55,7 +57,7 @@ public class AiheDao {
 
         Connection conn = DriverManager.getConnection(tietokantaosoite);
         Statement stmt = conn.createStatement();
-        ResultSet result = stmt.executeQuery("SELECT aihe_id FROM Aihe WHERE aihe = '" + aihe+"'");
+        ResultSet result = stmt.executeQuery("SELECT aihe_id FROM Aihe WHERE aihe = '" + aihe + "'");
 
         while (result.next()) {
             a = result.getInt("aihe_id");
@@ -66,6 +68,32 @@ public class AiheDao {
         return a;
     }
 
+    public List<Aihe> aiheenViestit() throws Exception {
+        Connection conn = DriverManager.getConnection(tietokantaosoite);
+        Statement stmt = conn.createStatement();
+        ResultSet result = stmt.executeQuery("SELECT a.aihe, COUNT(v.viestitunnus ) AS Viesteja_yhteensa, v.pvm_ja_aika AS Viimeisin_viesti\n"
+                + "FROM Aihe a, Viesti v, Keskustelu k\n"
+                + "WHERE k.aihe=a.aihe_id\n"
+                + "AND k.keskustelutunnus=v.keskustelutunnus\n"
+                + "GROUP BY a.aihe\n"
+                + "ORDER BY v.pvm_ja_aika DESC;");
+
+        List<Aihe> aiheet = new ArrayList<>();
+
+        while (result.next()) {
+            int id = result.getInt("aihe_id");
+            String aihe = result.getString("aihe");
+            int viesteja = result.getInt("Viesteja_yhteensa");
+            Timestamp uusin= result.getTimestamp("Viimeisin_viesti");
+
+            Aihe a = new Aihe(id, aihe, viesteja, uusin);
+            aiheet.add(a);
+        }
+
+        conn.close();
+
+        return aiheet;
+    }
 
 }
 

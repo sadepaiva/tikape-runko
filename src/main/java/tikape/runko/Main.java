@@ -12,8 +12,10 @@ import spark.template.thymeleaf.ThymeleafTemplateEngine;
 import tikape.runko.database.AiheDao;
 import tikape.runko.database.Database;
 import tikape.runko.database.KeskusteluDao;
+import tikape.runko.database.ViestiDao;
 import tikape.runko.domain.Aihe;
 import tikape.runko.domain.Keskustelu;
+import tikape.runko.domain.Viesti;
 
 public class Main {
 
@@ -22,6 +24,7 @@ public class Main {
 
         AiheDao aiheDao = new AiheDao("jdbc:sqlite:keskustelupalsta.db");
         KeskusteluDao keskusteluDao = new KeskusteluDao("jdbc:sqlite:keskustelupalsta.db");
+        ViestiDao viestiDao = new ViestiDao("jdbc:sqlite:keskustelupalsta.db");
         
         Spark.get("/", (req, res) -> {
             res.redirect("/aiheet");
@@ -47,7 +50,8 @@ public class Main {
             HashMap data = new HashMap<>();
             int aiheId = aiheDao.findOne(req.params(":aihe"));
             data.put("keskustelut", keskusteluDao.haeAiheenKt(aiheId));
-            data.put("aihe", aiheDao.findOne((req.params(":aihe"))));
+            data.put("lkm", viestiDao.laskeKeskustelunVt(aiheId));
+            data.put("aihe", req.params(":aihe"));
 
             return new ModelAndView(data, "aiheenKeskustelut");
         }, new ThymeleafTemplateEngine());
@@ -57,6 +61,23 @@ public class Main {
             keskusteluDao.luoKeskustelu(req.queryParams("keskustelu"), (aiheId));
 
             res.redirect("/aiheet/" + req.params(":aihe"));
+            return "ok";
+        });
+        
+        Spark.get("/keskustelut/:keskustelu", (req, res) -> {
+            HashMap data = new HashMap<>();
+            int keskusteluId = keskusteluDao.findOne(req.params(":keskustelu"));
+            data.put("viestit", viestiDao.haeKeskustelunVt(keskusteluId));
+            data.put("keskustelu", req.params(":keskustelu"));
+
+            return new ModelAndView(data, "keskustelunViestit");
+        }, new ThymeleafTemplateEngine());
+        
+        Spark.post("/keskustelut/:keskustelu", (req, res) -> {
+            int keskusteluId = keskusteluDao.findOne(req.params(":keskustelu"));
+            viestiDao.luoViesti(req.queryParams("viesti"), (keskusteluId), req.queryParams("nimimerkki"));
+
+            res.redirect("/keskustelut/" + req.params(":keskustelu"));
             return "ok";
         });
         

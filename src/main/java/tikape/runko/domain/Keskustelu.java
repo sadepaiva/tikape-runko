@@ -8,7 +8,7 @@ public class Keskustelu {
     private Integer keskustelutunnus;
     private Integer aihe;
     private String keskustelu;
-    
+    private List<Viesti> viestit;
     
 
     public Keskustelu(int keskustelutunnus, String keskustelu,int aihe ) {

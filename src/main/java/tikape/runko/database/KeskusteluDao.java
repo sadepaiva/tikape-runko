@@ -18,6 +18,7 @@ import tikape.runko.domain.Keskustelu;
 public class KeskusteluDao  {
 private String tietokantaosoite;
 
+
     public KeskusteluDao(String tietokantaosoite) {
         this.tietokantaosoite = tietokantaosoite;
     }
@@ -76,15 +77,15 @@ private String tietokantaosoite;
         return keskustelu;
     }
     
-    public String findOne(int tunnus) throws Exception {
-        String k = null;
+    public int findOne(String keskustelu) throws Exception {
+        int k = 0;
 
         Connection conn = DriverManager.getConnection(tietokantaosoite);
         Statement stmt = conn.createStatement();
-        ResultSet result = stmt.executeQuery("SELECT keskustelu FROM Keskustelu WHERE keskustelutunnus = " + tunnus);
+        ResultSet result = stmt.executeQuery("SELECT keskustelutunnus FROM Keskustelu WHERE keskustelu = '"+keskustelu +"'");
 
         while (result.next()) {
-            k = result.getString("keskustelu");
+            k = result.getInt("keskustelutunnus");
         }
 
         conn.close();

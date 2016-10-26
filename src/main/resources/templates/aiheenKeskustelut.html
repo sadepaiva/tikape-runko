@@ -4,14 +4,18 @@
         <title>Keskustelu</title>
     </head>
     <body>
+        <h1 th:text="${aihe}">testi</h1>
        
-       
-        <ul>
-            <li th:each="keskustelu: ${keskustelu}">   
-                <span th:text="${keskustelu.keskustelu}">keskustelu</span>
-                <a th:href="@{~/aiheet/{aihe}(aihe=${aihe.aihe})" 
-                 th:text="${keskustelu.keskustelu}">Keskustelu esimerkki</a>
+        <ul style="list-style-type:none;">
+            <li th:each="x: ${keskustelut}">   
                 
+                <a th:href="@{~/keskustelut/{keskustelu}(keskustelu=${x.keskustelu})}"
+                   th:text="${x.keskustelu}">keskustelu</a>
+            </li>
+            
+            <li th:each="y: ${lkm}">   
+                <span th:text="${y}">lkm</span>
+              
             </li>
         </ul>
         

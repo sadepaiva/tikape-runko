@@ -1,0 +1,32 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-4.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <title>Keskustelu</title>
+    </head>
+    <body>
+        <h1 th:text="${keskustelu}">testi</h1>
+       
+        <ul style="list-style-type:decimal;">
+            
+            <li th:each="x: ${viestit}">   
+                
+                <span th:text="${x.nimimerkki}">nimi</span>
+                <h1></h1>
+                <span th:text="${x.viesti}">viesti</span>
+                <h1></h1>
+                
+            </li>      
+        </ul>
+        
+            <form method="POST">
+            Nimimerkki:<br/>
+            <input type="text" name="nimimerkki"/><br/>
+            Viesti:<br/>
+            <input type="text" name="viesti"/><br/>
+            <input type="submit" value="lähetä viesti!"/>
+        </form>
+
+    </body>
+</html>
+
+

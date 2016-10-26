@@ -6,11 +6,15 @@
     <body>
         <h1>Keskustelupalsta</h1>
         <h2 th:text="${teksti}">testi</h2>
-        <ul>
+        
+        <ul style="list-style-type:none;">
+            
             <li th:each="aihe: ${aiheet}">
                 <a th:href="@{~/aiheet/{id}(id=${aihe.aihe})}" 
-                 th:text="${aihe.aihe}">1</a>
+                 th:text="${aihe.aihe}">nimi</a>
+                <a th:text="${aihe.yhteensa}">luku</a>
             </li>
+            
         </ul>
         
           <form method="POST">
