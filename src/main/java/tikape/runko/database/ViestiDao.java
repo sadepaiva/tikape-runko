@@ -105,14 +105,14 @@ public class ViestiDao {
       public List<Integer> laskeKeskustelunVt(int aiheId) throws Exception {
         Connection conn = DriverManager.getConnection(tietokantaosoite);
         Statement stmt = conn.createStatement();
-        ResultSet rs = stmt.executeQuery("SELECT k.keskustelu, COUNT(v.viesti) AS lkm FROM Viesti v,Keskustelu k WHERE k.keskustelutunnus=v.keskustelutunnus AND k.aihe = " + aiheId+" GROUP BY v.keskustelutunnus;");
+        ResultSet rs = stmt.executeQuery("SELECT k.keskustelu, COUNT(v.viesti) AS lkm FROM Viesti v LEFT JOIN Keskustelu k ON k.keskustelutunnus=v.keskustelutunnus WHERE k.aihe = " + aiheId+" GROUP BY v.keskustelutunnus;");
 
         List<Integer> viestit = new ArrayList<>();
 
         while (rs.next()) {
             Integer lkm = rs.getInt("lkm");
             
-
+            
             
             viestit.add(lkm);
         }

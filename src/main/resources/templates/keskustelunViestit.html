@@ -9,10 +9,11 @@
         <ul style="list-style-type:decimal;">
             
             <li th:each="x: ${viestit}">   
+                <span th:text="${x.viesti}">viesti</span> &nbsp;&nbsp; 
+                <a> t. </a>
+                <span  th:text="${x.nimimerkki}">nimi</span>
                 
-                <span th:text="${x.nimimerkki}">nimi</span>
-                <h1></h1>
-                <span th:text="${x.viesti}">viesti</span>
+                
                 <h1></h1>
                 
             </li>      

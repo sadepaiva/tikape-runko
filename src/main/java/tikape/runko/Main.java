@@ -33,7 +33,7 @@ public class Main {
         
         Spark.get("/aiheet", (req, res) -> {
             HashMap data = new HashMap<>();
-            data.put("aiheet", aiheDao.findAll());
+            data.put("aiheet", aiheDao.aiheenViestit());
 
             return new ModelAndView(data, "index");
         }, new ThymeleafTemplateEngine());
@@ -49,8 +49,7 @@ public class Main {
         Spark.get("/aiheet/:aihe", (req, res) -> {
             HashMap data = new HashMap<>();
             int aiheId = aiheDao.findOne(req.params(":aihe"));
-            data.put("keskustelut", keskusteluDao.haeAiheenKt(aiheId));
-            data.put("lkm", viestiDao.laskeKeskustelunVt(aiheId));
+            data.put("keskustelut", keskusteluDao.keskustelunViestit(aiheId));
             data.put("aihe", req.params(":aihe"));
 
             return new ModelAndView(data, "aiheenKeskustelut");

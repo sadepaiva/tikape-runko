@@ -7,7 +7,7 @@
         <h1>Keskustelupalsta</h1>
         <h2 th:text="${teksti}">testi</h2>
         
-        <ul style="list-style-type:none;">
+    <!--    <ul style="list-style-type:none;">
             
             <li th:each="aihe: ${aiheet}">
                 <a th:href="@{~/aiheet/{id}(id=${aihe.aihe})}" 
@@ -15,7 +15,35 @@
                 <a th:text="${aihe.yhteensa}">luku</a>
             </li>
             
-        </ul>
+        </ul> -->
+    
+       <table>
+       <tr>  
+            <th align="left" width="400">aihe</th>   
+            <th>viestejä</th>    
+        </tr>
+   </table>
+   
+   <table  th:each="aihe: ${aiheet}" >
+   
+                
+        <tr> 
+            <td width="400">
+                <div style="height:100%;width:100%">
+                    <a th:href="@{~/aiheet/{id}(id=${aihe.aihe})}"                   
+                       th:text="${aihe.aihe}">nimi</a>
+                </div>
+            </td>
+            <td th:text="${aihe.yhteensa}">luku</td>
+        </tr>
+
+    </table>
+    <p> </p>
+    <p> </p>    
+    <p> </p>
+    <p> </p>
+    <p> </p>
+       
         
           <form method="POST">
             <input type="text" name="nimi"/>
