@@ -1,7 +1,7 @@
 <!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-4.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
     <head>
-        <title>Keskustelu</title>
+        <title> Keskustelu</title>
     </head>
     <body>
         <h1 th:text="${keskustelu}">testi</h1>
@@ -10,8 +10,8 @@
             
             <li th:each="x: ${viestit}">   
                 <span th:text="${x.viesti}">viesti</span> &nbsp;&nbsp; 
-                <a> t. </a>
-                <span  th:text="${x.nimimerkki}">nimi</span>
+                <a style="color: #808080"> t. </a>
+                <a style="color: #808080"><span th:text="${x.nimimerkki}">nimi</span></a>
                 
                 
                 <h1></h1>
@@ -22,8 +22,9 @@
             <form method="POST">
             Nimimerkki:<br/>
             <input type="text" name="nimimerkki"/><br/>
+                <p> </p> 
             Viesti:<br/>
-            <input type="text" name="viesti"/><br/>
+            <textarea name="viesti" rows="10" cols="60"/><br/>
             <input type="submit" value="lähetä viesti!"/>
         </form>
 
