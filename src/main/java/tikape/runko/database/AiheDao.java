@@ -71,12 +71,14 @@ public class AiheDao {
     public List<Aihe> aiheenViestit() throws Exception {
         Connection conn = DriverManager.getConnection(tietokantaosoite);
         Statement stmt = conn.createStatement();
-        ResultSet result = stmt.executeQuery("SELECT a.aihe_id, a.aihe, COUNT(v.viestitunnus ) AS Viesteja_yhteensa, v.pvm_ja_aika AS Viimeisin_viesti\n"
+        ResultSet result = stmt.executeQuery(" SELECT a.aihe_id, a.aihe, COUNT(v.viestitunnus ) AS Viesteja_yhteensa , v.pvm_ja_aika AS Viimeisin_viesti\n"
                 + "FROM Aihe a \n"
                 + "LEFT JOIN Keskustelu k ON k.aihe=a.aihe_id\n"
                 + "LEFT JOIN Viesti v ON k.keskustelutunnus=v.keskustelutunnus\n"
-                + "GROUP BY a.aihe\n"
-                + "ORDER BY v.pvm_ja_aika DESC;");
+                + "WHERE Viimeisin_viesti IN (SELECT v.pvm_ja_aika\n"
+                + "FROM Viesti v\n"
+                + "ORDER BY v.pvm_ja_aika DESC)\n"
+                + "GROUP BY a.aihe");
 
         List<Aihe> aiheet = new ArrayList<>();
 

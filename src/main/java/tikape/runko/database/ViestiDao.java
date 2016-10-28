@@ -9,6 +9,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -27,8 +28,11 @@ public class ViestiDao {
     public void luoViesti(String viesti, int keskusteluId, String nimi) throws Exception {
         Connection conn = DriverManager.getConnection(tietokantaosoite);
         Statement stmt = conn.createStatement();
-        stmt.execute("INSERT INTO Viesti(keskustelutunnus, viesti, nimimerkki) "
-                + "VALUES (" + keskusteluId + ", '" + viesti+ "', '" +nimi+"')");
+        Calendar calendar = Calendar.getInstance();
+        java.sql.Timestamp timestamp = new java.sql.Timestamp(calendar.getTime().getTime());
+
+        stmt.execute("INSERT INTO Viesti(keskustelutunnus, viesti, nimimerkki, pvm_ja_aika) "
+                + "VALUES (" + keskusteluId + ", '" + viesti + "', '" + nimi + "', '" + timestamp + "')");
 
         conn.close();
 
@@ -58,8 +62,8 @@ public class ViestiDao {
 
         return viestit;
     }
-    
-     public List<Viesti> findAll() throws Exception {
+
+    public List<Viesti> findAll() throws Exception {
         Connection conn = DriverManager.getConnection(tietokantaosoite);
         Statement stmt = conn.createStatement();
         ResultSet rs = stmt.executeQuery("SELECT * FROM Viesti");
@@ -77,7 +81,7 @@ public class ViestiDao {
 
             Viesti v = new Viesti(viestitunnus, keskustelutunnus, viestinro, viesti, nimimerkki, pvm, pvm_ja_aika);
             viestit.add(v);
- 
+
         }
         rs.close();
         stmt.close();
@@ -85,8 +89,8 @@ public class ViestiDao {
 
         return viestit;
     }
-     
-      public String findOne(int tunnus) throws Exception {
+
+    public String findOne(int tunnus) throws Exception {
         String v = null;
 
         Connection conn = DriverManager.getConnection(tietokantaosoite);
@@ -101,19 +105,17 @@ public class ViestiDao {
 
         return v;
     }
-      
-      public List<Integer> laskeKeskustelunVt(int aiheId) throws Exception {
+
+    public List<Integer> laskeKeskustelunVt(int aiheId) throws Exception {
         Connection conn = DriverManager.getConnection(tietokantaosoite);
         Statement stmt = conn.createStatement();
-        ResultSet rs = stmt.executeQuery("SELECT k.keskustelu, COUNT(v.viesti) AS lkm FROM Viesti v LEFT JOIN Keskustelu k ON k.keskustelutunnus=v.keskustelutunnus WHERE k.aihe = " + aiheId+" GROUP BY v.keskustelutunnus;");
+        ResultSet rs = stmt.executeQuery("SELECT k.keskustelu, COUNT(v.viesti) AS lkm FROM Viesti v LEFT JOIN Keskustelu k ON k.keskustelutunnus=v.keskustelutunnus WHERE k.aihe = " + aiheId + " GROUP BY v.keskustelutunnus;");
 
         List<Integer> viestit = new ArrayList<>();
 
         while (rs.next()) {
             Integer lkm = rs.getInt("lkm");
-            
-            
-            
+
             viestit.add(lkm);
         }
 

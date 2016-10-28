@@ -81,28 +81,32 @@ public class KeskusteluDao {
         return keskustelu;
     }
 
+    
+
     public List<Keskustelu> keskustelunViestit(int aiheId) throws Exception {
-      
+
         Connection conn = DriverManager.getConnection(tietokantaosoite);
         Statement stmt = conn.createStatement();
         ResultSet result = stmt.executeQuery("SELECT k.keskustelutunnus, k.aihe, k.keskustelu, COUNT(v.viesti) AS Viesteja_yhteensa, v.pvm_ja_aika AS Viimeisin_viesti\n"
                 + "FROM Keskustelu k\n"
                 + "LEFT JOIN Viesti v ON k.keskustelutunnus = v.keskustelutunnus \n"
-                + "WHERE k.aihe = "+aiheId+"\n"
-                + "GROUP BY k.keskustelu\n"
-                + "ORDER BY Viimeisin_viesti DESC;");
+                + "WHERE k.aihe ="+aiheId+"\n"
+                + "AND Viimeisin_viesti IN (SELECT v.pvm_ja_aika\n"
+                + "FROM Viesti v\n"
+                + "ORDER BY v.pvm_ja_aika DESC)\n"
+                + "GROUP BY k.aihe");
 
         List<Keskustelu> keskustelu = new ArrayList<>();
 
         while (result.next()) {
-            
+
             int keskustelutunnus = result.getInt("keskustelutunnus");
             String keskustelut = result.getString("keskustelu");
             int aihe = result.getInt("aihe");
             int viesteja = result.getInt("Viesteja_yhteensa");
             Timestamp uusin = result.getTimestamp("Viimeisin_viesti");
 
-            Keskustelu k = new Keskustelu(keskustelutunnus, keskustelut,aihe, viesteja, uusin);
+            Keskustelu k = new Keskustelu(keskustelutunnus, keskustelut, aihe, viesteja, uusin);
             k.setYhteensa(viesteja);
             keskustelu.add(k);
         }

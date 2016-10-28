@@ -4,25 +4,13 @@
         <title>Keskustelu</title>
     </head>
     <body>
+         <a th:href="@{~/aiheet}" >Etusivulle</a> 
         <h1 th:text="${aihe}">testi</h1>
-       
-       <!-- <ul style="list-style-type:none;">
-            <li th:each="x: ${keskustelut}">   
-                
-                <a th:href="@{~/keskustelut/{keskustelu}(keskustelu=${x.keskustelu})}"
-                   th:text="${x.keskustelu}">keskustelu</a>
-            </li>
-            
-            <li th:each="y: ${lkm}">   
-                <span th:text="${y}">lkm</span>
-              
-            </li>
-        </ul> -->
        
           <table>
        <tr>  
             <th align="left" width="400">keskustelu</th>   
-            <th align="left" width="200" >viestejä</th> 
+            <th align="left" width="400" >viestejä</th> 
             <th>viimeisin</th> 
         </tr>
    </table>
@@ -38,7 +26,8 @@
                 </div>
             </td>
             
-             <td th:text="${x.yhteensa}">luku</td>
+             <td width="400" th:text="${x.yhteensa}">luku</td>
+             <td th:text="${x.uusin}">luku</td>
             
         </tr>
 
