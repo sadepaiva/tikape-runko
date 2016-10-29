@@ -13,16 +13,14 @@ public class Viesti {
 
     private Integer viestitunnus;
     private Integer keskustelutunnus;
-    private Integer viestinro;
     private String viesti;
     private String nimimerkki;
     private Date pvm;
     private Timestamp pvm_ja_aika;
 
-    public Viesti(Integer viestitunnus, Integer keskustelutunnus, Integer viestinro, String viesti, String nimimerkki, Date pvm, Timestamp pvm_ja_aika) {
+    public Viesti(Integer viestitunnus, Integer keskustelutunnus, String viesti, String nimimerkki, Date pvm, Timestamp pvm_ja_aika) {
         this.viestitunnus = viestitunnus;
         this.keskustelutunnus = keskustelutunnus;
-        this.viestinro = viestinro;
         this.viesti = viesti;
         this.nimimerkki = nimimerkki;
         this.pvm = pvm;
@@ -44,14 +42,6 @@ public class Viesti {
 
     public void setKeskustelutunnus(Integer keskustelutunnus) {
         this.keskustelutunnus = keskustelutunnus;
-    }
-
-    public Integer getViestinro() {
-        return viestinro;
-    }
-
-    public void setViestinro(Integer viestinro) {
-        this.viestinro = viestinro;
     }
 
     public String getViesti() {

@@ -49,13 +49,12 @@ public class ViestiDao {
         while (rs.next()) {
             Integer viestitunnus = rs.getInt("viestitunnus");
             Integer keskustelutunnus = rs.getInt("keskustelutunnus");
-            Integer viestinro = rs.getInt("viestinro");
             String viesti = rs.getString("viesti");
             String nimimerkki = rs.getString("nimimerkki");
             Date pvm = rs.getDate("pvm");
             Timestamp pvm_ja_aika = rs.getTimestamp("pvm_ja_aika");
 
-            Viesti v = new Viesti(viestitunnus, keskustelutunnus, viestinro, viesti, nimimerkki, pvm, pvm_ja_aika);
+            Viesti v = new Viesti(viestitunnus, keskustelutunnus, viesti, nimimerkki, pvm, pvm_ja_aika);
             viestit.add(v);
         }
 
@@ -74,13 +73,12 @@ public class ViestiDao {
         while (rs.next()) {
             Integer viestitunnus = rs.getInt("viestitunnus");
             Integer keskustelutunnus = rs.getInt("keskustelutunnus");
-            Integer viestinro = rs.getInt("viestinro");
             String viesti = rs.getString("viesti");
             String nimimerkki = rs.getString("nimimerkki");
             Date pvm = rs.getDate("pvm");
             Timestamp pvm_ja_aika = rs.getTimestamp("pvm_ja_aika");
 
-            Viesti v = new Viesti(viestitunnus, keskustelutunnus, viestinro, viesti, nimimerkki, pvm, pvm_ja_aika);
+            Viesti v = new Viesti(viestitunnus, keskustelutunnus, viesti, nimimerkki, pvm, pvm_ja_aika);
             viestit.add(v);
 
         }
