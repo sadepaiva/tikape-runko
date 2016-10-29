@@ -76,7 +76,7 @@ public class AiheDao {
                 + "LEFT JOIN Keskustelu k ON k.aihe=a.aihe_id\n"
                 + "LEFT JOIN Viesti v ON k.keskustelutunnus=v.keskustelutunnus\n"
                 + "GROUP BY a.aihe\n"
-                + "ORDER BY a.aihe");
+                + "ORDER BY Viimeisin_viesti");
 
         List<Aihe> aiheet = new ArrayList<>();
 
