@@ -31,6 +31,7 @@ public class ViestiDao {
         Calendar calendar = Calendar.getInstance();
         java.sql.Timestamp timestamp = new java.sql.Timestamp(calendar.getTime().getTime());
 
+
         stmt.execute("INSERT INTO Viesti(keskustelutunnus, viesti, nimimerkki, pvm_ja_aika) "
                 + "VALUES (" + keskusteluId + ", '" + viesti + "', '" + nimi + "', '" + timestamp + "')");
 

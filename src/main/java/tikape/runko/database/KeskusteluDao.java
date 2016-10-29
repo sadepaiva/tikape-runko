@@ -81,8 +81,6 @@ public class KeskusteluDao {
         return keskustelu;
     }
 
-    
-
     public List<Keskustelu> keskustelunViestit(int aiheId) throws Exception {
 
         Connection conn = DriverManager.getConnection(tietokantaosoite);
@@ -90,11 +88,9 @@ public class KeskusteluDao {
         ResultSet result = stmt.executeQuery("SELECT k.keskustelutunnus, k.aihe, k.keskustelu, COUNT(v.viesti) AS Viesteja_yhteensa, v.pvm_ja_aika AS Viimeisin_viesti\n"
                 + "FROM Keskustelu k\n"
                 + "LEFT JOIN Viesti v ON k.keskustelutunnus = v.keskustelutunnus \n"
-                + "WHERE k.aihe ="+aiheId+"\n"
-                + "AND Viimeisin_viesti IN (SELECT v.pvm_ja_aika\n"
-                + "FROM Viesti v\n"
-                + "ORDER BY v.pvm_ja_aika DESC)\n"
-                + "GROUP BY k.aihe");
+                + "WHERE k.aihe="+aiheId+" \n"
+                + "GROUP BY k.keskustelu\n"
+                + "ORDER BY Viimeisin_viesti DESC;");
 
         List<Keskustelu> keskustelu = new ArrayList<>();
 
