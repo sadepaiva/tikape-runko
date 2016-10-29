@@ -81,15 +81,6 @@ public class Main {
         });
         
         
-        
-        
-//        Spark.get("/keskustelut", (req, res) -> {
-//            HashMap data = new HashMap<>();
-//            data.put("keskustelu", keskusteluDao.findAll());
-//
-//            return new ModelAndView(data, "keskustelu");
-//        }, new ThymeleafTemplateEngine());
-
     }
 
     static int getHerokuAssignedPort() {
@@ -100,34 +91,3 @@ public class Main {
         return 4567; //return default port if heroku-port isn't set (i.e. on localhost)
     }
 }
-
-
-//           get("/", (req, res) -> {
-//            HashMap map = new HashMap<>();
-//            map.put("aiheet", AiheDao.findAll());
-//
-//            return new ModelAndView(map, "index");
-//        }, new ThymeleafTemplateEngine());
-//        
-//        get("/", (req, res) -> {
-//            HashMap map = new HashMap<>();
-//            map.put("viesti", "tervehdys");
-//
-//            return new ModelAndView(map, "index");
-//        }, new ThymeleafTemplateEngine());
-//
-//        get("/opiskelijat", (req, res) -> {
-//            HashMap map = new HashMap<>();
-//            map.put("opiskelijat", opiskelijaDao.findAll());
-//
-//            return new ModelAndView(map, "opiskelijat");
-//        }, new ThymeleafTemplateEngine());
-//
-//        get("/opiskelijat/:id", (req, res) -> {
-//            HashMap map = new HashMap<>();
-//            map.put("opiskelija", opiskelijaDao.findOne(Integer.parseInt(req.params("id"))));
-//
-//            return new ModelAndView(map, "opiskelija");
-//        }, new ThymeleafTemplateEngine());
-//    }
-//}
